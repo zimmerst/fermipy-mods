@@ -1,4 +1,4 @@
-FROM FROM fermipy/fermipy:latest
+FROM fermipy/fermipy:latest
 MAINTAINER Stephan Zimmer <zimmer@slac.stanford.edu>
 RUN cd /home
 RUN mkdir /home/pointlike
