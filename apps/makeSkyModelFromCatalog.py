@@ -18,7 +18,11 @@ from uw.like.pointspec_helpers import PointSource,get_default_diffuse
 from uw.utilities.xml_parsers import parse_sources
 from tempfile import NamedTemporaryFile
 import xml.dom.minidom as xdom
-import StringIO, os, pyfits, sys, random, shutil
+from StringIO import StringIO
+from shutil import rmtree, move
+from sys import argv
+import astropy.io.fits as pyfits
+import os
 import uw.like.Models
 from uw.like.roi_monte_carlo import NoSimulatedPhotons
 
@@ -29,7 +33,7 @@ def AddCatalog(xmlfile,idstart,idstop,tmpbase,diffdir=None):
         idstop = 999999999 # huge number!
     # This code takes an xmlfile and creates a new one
     kstring = '<?xml version="1.0" ?>\n<source_library/>'
-    xo = xdom.parse(StringIO.StringIO(kstring))
+    xo = xdom.parse(StringIO(kstring))
     xf = xdom.parse(xmlfile)
     sid = 0
     for src in xf.getElementsByTagName("source"):
@@ -141,7 +145,7 @@ def removePath(path):
         for f in files:
             os.unlink(os.path.join(root, f))
         for d in dirs:
-            shutil.rmtree(os.path.join(root, d))
+            rmtree(os.path.join(root, d))
     
 
 def main(inputfile,tag,idstart=None,idstop=None,debug=False,diffdir=None,tstart=0, tstop=8000, ft2file='None', emin=100, emax=1e5, seed=1000,irf='P7SOURCE_V6', dry_run=True, gtifile=None, zmax=None):
@@ -204,7 +208,7 @@ def main(inputfile,tag,idstart=None,idstop=None,debug=False,diffdir=None,tstart=
     for f in files:
         infile = os.path.join(Outdir+'/raw/',f)
         outfile= os.path.join(storedir,f)
-        shutil.move(infile,outfile)
+        move(infile,outfile)
     # finally, clean up
     removePath(Outdir)
     
@@ -249,7 +253,7 @@ if __name__ == "__main__":
     
         
     (opts, arguments) = parser.parse_args()
-    inputfile = sys.argv[1]
+    inputfile = argv[1]
     if os.getenv("SKYMODEL_DIR") is None:
         os.environ["SKYMODEL_DIR"] = opts.rootdir
 
